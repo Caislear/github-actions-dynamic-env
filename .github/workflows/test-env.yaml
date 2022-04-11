@@ -9,13 +9,19 @@ on:
         required: true
 
 jobs:
-  - select-environment:
+  select-environment:
+    name: Select the workflow env
     runs-on: ubuntu-latest
-    run: |
-      echo "CUSTOM_ENV=$(git rev-parse HEAD)" >> $GITHUB_ENV
+    steps:
+      - name: select env
+        run: |
+          echo "CUSTOM_ENV=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-  - consume-environment:
+  consume-environment:
+    name: consume the custom environment
     environment: ${{ env.CUSTOM_ENV }}
-    run: |
-      echo ${{ env.CUSTOM_ENV }} &&
-      echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g'
+    steps:
+      - name: consume environment
+        run: |
+          echo ${{ env.CUSTOM_ENV }} &&
+          echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g'
