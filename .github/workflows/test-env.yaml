@@ -33,7 +33,8 @@ jobs:
         run: |
           echo CUSTOM_ENV=$WORKFLOW_INPUT  >> $GITHUB_ENV
       - name: Output selected environment
-        run: echo "Extracted environment name: $CUSTOM_ENV"  && echo ::set-output name=environment:: $CUSTOM_ENV
+        run: |
+          echo "Extracted environment name: $CUSTOM_ENV"  && echo "::set-output name=environment:: $CUSTOM_ENV"
 
   consume-environment:
     name: consume the custom environment
