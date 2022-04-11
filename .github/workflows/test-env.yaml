@@ -1,0 +1,21 @@
+on:
+  push: 
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Github Workflow Environment"
+        type: environment
+        required: true
+
+jobs:
+  - select-environment:
+    runs-on: ubuntu-latest
+    run: |
+      echo "CUSTOM_ENV=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+  - consume-environment:
+    environment: ${{ env.CUSTOM_ENV }}
+    run: |
+      echo ${{ env.CUSTOM_ENV }} &&
+      echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g'
