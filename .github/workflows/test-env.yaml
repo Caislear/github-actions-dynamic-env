@@ -9,17 +9,34 @@ on:
         required: true
 
 jobs:
-  select-environment:
-    name: Select the workflow env
+  #https://stackoverflow.com/questions/61255989/dynamically-retrieve-github-actions-secret
+  get-environment-name
+    name: Determine Github Environment
     runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.extract.outputs.environment }}
     steps:
-      - name: select env
+      - name: Determine if dev #commits to the default branch should be dev env
+        if: github.event.ref == format('refs/heads/{0}', inputs.development-branch) || (startsWith(github.event.ref, 'refs/tags/v') && github.event.ref == format('refs/heads/{0}', inputs.development-branch))
         run: |
-          echo "CUSTOM_ENV=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo CUSTOM_ENV=dev >> $GITHUB_ENV
+
+      - name: Determine if prod #commits with tags on default branch should be prod env
+        if: github.event.ref == format('refs/heads/{0}', inputs.development-branch) && startsWith(github.event.ref, 'refs/tags/v')
+        run: |
+          echo CUSTOM_ENV=prod >> $GITHUB_ENV
+
+      - name: Override with input #always use the value provided by the workflow input if one is set
+        if: "github.event.inputs.environment"
+        run: |
+          echo CUSTOM_ENV= ${{ github.event.inputs.environment }} >> $GITHUB_ENV
+      - name: Output selected environment
+        run: 'echo "Extracted environment name: $CUSTOM_ENV"' && echo ::set-output name=CUSTOM_ENV::"$CUSTOM_ENV"
 
   consume-environment:
     name: consume the custom environment
-    environment: ${{ env.CUSTOM_ENV }}
+    needs: [get-environment-name]
+    environment: ${{ needs.get-environment-name.outputs.environment }}
     steps:
       - name: consume environment
         run: |
