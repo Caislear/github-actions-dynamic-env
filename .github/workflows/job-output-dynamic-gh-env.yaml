@@ -16,6 +16,8 @@ jobs:
     outputs:
       environment: ${{ steps.extract.outputs.environment }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Determine if dev #commits to the default branch should be dev env
         if: github.event.ref == format('refs/heads/{0}', inputs.development-branch) || (startsWith(github.event.ref, 'refs/tags/v') && github.event.ref == format('refs/heads/{0}', inputs.development-branch))
         run: |
