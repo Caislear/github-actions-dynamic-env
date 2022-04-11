@@ -28,8 +28,10 @@ jobs:
 
       - name: Override with input #always use the value provided by the workflow input if one is set
         if: "github.event.inputs.environment"
+        env:
+          WORKFLOW_INPUT: ${{ github.event.inputs.environment }}
         run: |
-          echo CUSTOM_ENV= ${{ github.event.inputs.environment }} >> $GITHUB_ENV
+          echo CUSTOM_ENV=$WORKFLOW_INPUT  >> $GITHUB_ENV
       - name: Output selected environment
         run: echo "Extracted environment name: $CUSTOM_ENV"  && echo ::set-output name=environment:: $CUSTOM_ENV
 
