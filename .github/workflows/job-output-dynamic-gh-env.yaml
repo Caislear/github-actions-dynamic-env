@@ -56,4 +56,5 @@ jobs:
           VALUE: ${{secrets.ENVIRONMENT_VALUE}}
         run: |
           echo "The name of the targeted env: ${{ needs.get-environment-name.outputs.environment }}"
-          echo $(echo $VALUE)
+          echo $(echo $VALUE > output.txt)
+          cat output.txt
