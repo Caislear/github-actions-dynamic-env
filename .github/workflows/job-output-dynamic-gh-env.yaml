@@ -23,12 +23,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Determine if dev #commits to the default branch should be dev env
-        if: github.event.ref == format('refs/heads/{0}', inputs.development-branch) || (startsWith(github.event.ref, 'refs/tags/v') && github.event.ref == format('refs/heads/{0}', inputs.development-branch))
+        if: "(github.event.ref == format('refs/heads/{0}', github.event.repository.default_branch) || startsWith(github.event.ref, 'refs/tags/v') || github.event.ref == format('refs/heads/{0}', inputs.development-branch))"
         run: |
+          echo ${{ }}
           echo CUSTOM_ENV=dev >> $GITHUB_ENV
 
       - name: Determine if prod #commits with tags on default branch should be prod env
-        if: github.event.ref == format('refs/heads/{0}', inputs.development-branch) && startsWith(github.event.ref, 'refs/tags/v')
+        if: "(github.event.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event.ref == format('refs/heads/{0}', inputs.development-branch)) && startsWith(github.event.ref, 'refs/tags/v')"
         run: |
           echo CUSTOM_ENV=prod >> $GITHUB_ENV
 
