@@ -50,6 +50,8 @@ jobs:
     environment: ${{ needs.get-environment-name.outputs.environment }}
     steps:
       - name: consume environment
+        env:
+          VALUE: ${{secrets.ENVIRONMENT_VALUE}}
         run: |
           echo ${{ env.CUSTOM_ENV }} &&
-          echo $(echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g')
+          echo $(echo $VALUE | sed 's/./& /g')
