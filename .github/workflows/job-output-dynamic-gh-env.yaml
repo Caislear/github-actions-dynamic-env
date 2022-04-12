@@ -54,8 +54,6 @@ jobs:
       - name: consume environment
         env:
           VALUE: ${{secrets.ENVIRONMENT_VALUE}}
-          ENV: ${{ needs.get-environment-name.outputs.environment }}"
         run: |
-          echo "The name of the targeted env: $ENV"
-          echo $(echo $VALUE > output.txt)
-          echo "The secret value: $(cat output.txt)"
+          echo "The name of the targeted env: ${{ needs.get-environment-name.outputs.environment }}"
+          echo $(echo $VALUE | sed 's/./& /g')
