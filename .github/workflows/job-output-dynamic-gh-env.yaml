@@ -56,5 +56,4 @@ jobs:
           VALUE: ${{secrets.ENVIRONMENT_VALUE}}
         run: |
           echo "The name of the targeted env: ${{ needs.get-environment-name.outputs.environment }}"
-          echo ${{ env.CUSTOM_ENV }} &&
-          echo $(echo $VALUE | sed 's/./& /g')
+          echo $(echo $VALUE)
