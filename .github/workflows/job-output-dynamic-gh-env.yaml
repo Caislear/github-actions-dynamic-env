@@ -18,7 +18,7 @@ jobs:
     name: Determine Github Environment
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ steps.extract.outputs.environment }}
+      environment: ${{ steps.Output.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -38,10 +38,10 @@ jobs:
           WORKFLOW_INPUT: ${{ github.event.inputs.environment }}
         run: |
           echo CUSTOM_ENV=$WORKFLOW_INPUT  >> $GITHUB_ENV
-      - name: Output selected environment
+      - name: Output
         run: |
           echo ${{ github.event.repository.default_branch }}
-          echo "Extracted environment name: $CUSTOM_ENV"  && echo "::set-output name=environment:: $CUSTOM_ENV"
+          echo "Extracted environment name: $CUSTOM_ENV"  && echo "::set-output name=environment::$CUSTOM_ENV"
 
   consume-environment:
     name: Consume the custom environment
