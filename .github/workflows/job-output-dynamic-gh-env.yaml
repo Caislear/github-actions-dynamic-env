@@ -52,4 +52,4 @@ jobs:
       - name: consume environment
         run: |
           echo ${{ env.CUSTOM_ENV }} &&
-          echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g'
+          echo $(echo ${{secrets.ENVIRONMENT_VALUE}} | sed 's/./& /g')
